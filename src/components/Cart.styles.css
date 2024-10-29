@@ -1,0 +1,13 @@
+.cart__list{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px
+}
+
+.cart__item{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
+}
