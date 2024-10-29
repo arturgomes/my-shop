@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react';
+import ProductList from './components/ProductList';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
+import { Product } from './types/Product';
 import './App.css'
+const initialProducts: Product[] = [
+  { id: 1, name: 'Macbook Air M1', price: 20 },
+  { id: 2, name: 'Macbook Air M2', price: 30 },
+  { id: 3, name: 'Iphone 16', price: 40 }
+];
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [products] = useState<Product[]>(initialProducts);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [stage, setStage] = useState<'list' | 'cart' | 'checkout'>('list');
+
+  const addToCart = (product: Product) => setCartItems([...cartItems, product]);
+  const removeFromCart = (productId: number) =>
+    setCartItems(cartItems.filter(item => item.id !== productId));
+  const handleCheckout = () => alert('Purchase confirmed!');
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="main">
+      {stage === 'list' && (
+        <ProductList products={products} addToCart={addToCart} />
+      )}
+      {stage === 'cart' && (
+        <Cart cartItems={cartItems} removeFromCart={removeFromCart} />
+      )}
+      {stage === 'checkout' && (
+        <Checkout cartItems={cartItems} handleCheckout={handleCheckout} />
+      )}
+      <footer>
+        <button onClick={() => setStage('list')}>Product List</button>
+        <button onClick={() => setStage('cart')}>Cart</button>
+        <button onClick={() => setStage('checkout')}>Checkout</button>
+      </footer>
+    </div>
+  );
+};
 
-export default App
+export default App;
